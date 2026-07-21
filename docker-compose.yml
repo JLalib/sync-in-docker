@@ -1,0 +1,39 @@
+services:
+  sync_in:
+    image: syncin/server:latest
+    container_name: Sync-in
+    environment:
+      - INIT_ADMIN=true
+      - INIT_ADMIN_LOGIN=admin
+      - INIT_ADMIN_PASSWORD=tu_password_seguro
+      - PUID=1026
+      - PGID=100
+    ports:
+      - "8324:8080"
+    volumes:
+      - /volume1/docker/syncin/environment.yaml:/app/environment/environment.yaml
+      - /volume1/docker/syncin/data:/app/data:rw
+      - /volume1/docker/syncin/static:/app/static/releases:ro
+    depends_on:
+      - mariadb
+      - onlyoffice
+    restart: on-failure:10
+
+  mariadb:
+    image: mariadb:11.8-noble
+    container_name: Sync-in-DB
+    environment:
+      - MYSQL_DATABASE=sync_in
+      - MYSQL_ROOT_PASSWORD=root_password
+    volumes:
+      - /volume1/docker/syncin/db:/var/lib/mysql:rw
+    restart: on-failure:5
+
+  onlyoffice:
+    container_name: Sync-in-ONLYOFFICE
+    image: onlyoffice/documentserver:latest
+    ports:
+      - "8467:80"
+    volumes:
+      - /volume1/docker/syncin/onlyoffice/data:/var/www/onlyoffice/Data:rw
+    restart: on-failure:5
