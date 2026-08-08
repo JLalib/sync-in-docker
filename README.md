@@ -1,44 +1,45 @@
-# Sync-in: Plataforma soberana de almacenamiento, sincronización y colaboración en equipo
+# 🚀 Sync-in Docker - Plataforma Soberana de Almacenamiento y Colaboración
 
-![Docker](https://img.shields.io/badge/Docker-Sync--in-blue)
-![License](https://img.shields.io/badge/License-AGPL--3.0-blue)
+[![GitHub](https://img.shields.io/badge/GitHub-sync--in--docker-blue?logo=github)](https://github.com/syncin/syncin-server)
+[![Docker](https://img.shields.io/badge/Docker-syncin%2Fserver-blue?logo=docker)](https://hub.docker.com/r/syncin/server)
+[![License](https://img.shields.io/badge/License-AGPL--3.0-orange)](https://www.gnu.org/licenses/agpl-3.0.html)
 
-> **Sync-in** es una plataforma soberana de almacenamiento de archivos y colaboración diseñada para equipos y usuarios que no quieren renunciar al control de su infraestructura ni de sus datos. A diferencia de los servicios de nube tradicionales, Sync-in mantiene los archivos legibles en tu propio sistema de archivos mientras añade capas potentes de colaboración.
+## 📋 Descripción general
 
-## Características principales
+**Sync-in** es una plataforma soberana de almacenamiento de archivos y colaboración diseñada para equipos y usuarios que no quieren renunciar al control de su infraestructura ni de sus datos. A diferencia de los servicios de nube tradicionales, Sync-in mantiene los archivos legibles en tu propio sistema de archivos mientras añade capas potentes de colaboración.
 
-- **Interfaz web moderna** con drag & drop y vista de galería
-- **Autenticación avanzada** (OIDC, LDAP, MFA)
-- **Gestión de Espacios (Spaces)** con roles y permisos detallados
-- **Enlaces públicos protegidos** con contraseñas y fechas de expiración
-- **Edición de documentos en tiempo real** (integración con OnlyOffice y Collabora)
-- **Indexación profunda de contenido** para búsqueda full‑text
-- **Soporte WebDAV** para montar la nube como unidad de red
-- **Clientes nativos** para Windows, macOS y Linux
-- **Cliente de escritorio y CLI** para flujos de sincronización eficientes
+**Ventaja clave:** Privacidad por diseño. No hay telemetría ni dependencia de terceros. Permite gestionar espacios de trabajo compartidos con permisos granulares, asegurando que la información sensible esté protegida pero accesible para quien deba estarlo.
 
-### Para equipos y profesionales
-- Elimina la dependencia de Google Drive o Dropbox
-- Sincronización rápida, segura y bajo tu propio dominio
+## ✨ Características principales
 
-## Requisitos del sistema
+- 🌐 **Interfaz web moderna** con drag & drop y vista de galería
+- 🔐 **Autenticación avanzada** (OIDC, LDAP, MFA)
+- 📁 **Gestión de Espacios (Spaces)** con roles y permisos detallados
+- 🔗 **Enlaces públicos protegidos** con contraseñas y fechas de expiración
+- 📝 **Edición de documentos en tiempo real** (integración con OnlyOffice y Collabora)
+- 🔍 **Indexación profunda de contenido** para búsqueda full-text
+- 📂 **Soporte WebDAV** para montar la nube como unidad de red
+- 💻 **Clientes nativos** para Windows, macOS y Linux
+- ⚡ **Sincronización soberana** - Tus archivos, tu servidor
+- 🛡️ **Control total** sobre dónde y cómo se almacenan los datos
 
-- **Docker & Docker Compose**
-- **RAM:** 2 GB+ (especialmente si usas OnlyOffice/Collabora)
+## 📋 Requisitos del sistema
+
+- **Docker** y **Docker Compose** instalados
+- **RAM:** Recomendado 2GB+ (especialmente si usas OnlyOffice/Collabora)
 - **Espacio en disco:** Según el volumen de datos a almacenar
-- **Base de datos:** MariaDB/MySQL (incluida en el despliegue)
-- **Puerto:** 80/443 configurables para acceso web
-- **Navegador moderno** y cliente de escritorio Sync‑in (opcional)
+- **Base de Datos:** MariaDB/MySQL (incluida en el despliegue)
+- **Puertos:** 80/443 configurables para acceso web (por defecto 8324)
+- **Navegador moderno** y cliente de escritorio Sync-in (opcional)
 
-> 💡 **Sugerencia:** Para una experiencia completa de colaboración, despliega el contenedor de OnlyOffice junto al servidor de Sync‑in.
+> 💡 **Sugerencia:** Para una experiencia completa de colaboración, despliega el contenedor de OnlyOffice junto al servidor de Sync-in.
 
-## Instalación con Docker Compose
+## 🐳 Instalación
 
-### Paso 1: Crear `docker-compose.yml`
+### Paso 1: Crear docker-compose.yml
 
-Copia el siguiente contenido en un archivo llamado `docker-compose.yml`:
-
-```yaml
+```bash
+cat > docker-compose.yml << 'EOF'
 services:
   sync_in:
     image: syncin/server:latest
@@ -78,58 +79,117 @@ services:
     volumes:
       - /volume1/docker/syncin/onlyoffice/data:/var/www/onlyoffice/Data:rw
     restart: on-failure:5
+EOF
 ```
 
-### Paso 2: Editar las contrasejas
-
-Antes de iniciar los contenedores, edita el archivo `docker-compose.yml` para establecer tus contraseñas:
-
-- `INIT_ADMIN_PASSWORD`: contraseña para el administrador de Sync‑in (usuario `admin`)
-- `MYSQL_ROOT_PASSWORD`: contraseña para el usuario root de MariaDB
-
-Puedes dejar los volúmenes tal cual o adaptar las rutas a tu entorno.
-
-### Paso 3: Iniciar los servicios
-
-Ejecuta el siguiente comando en el mismo directorio donde está el `docker-compose.yml`:
+### Paso 2: Iniciar los servicios
 
 ```bash
 docker compose up -d
-```
 
-Verifica que todos los contenedores estén corriendo:
-
-```bash
+# Verifica que todos los contenedores estén corriendo
 docker compose ps
 ```
 
-### Paso 4: Acceder a Sync‑in
+### Acceder
 
-Abre tu navegador y visita:
+Abre tu navegador en: **http://localhost:8324** - Dashboard de Sync-in
 
-```
-http://localhost:8324
-```
-
-Deberás ver el panel de inicio de sesión de Sync‑in.
-
-### Paso 5: Primer login
-
+**Primer login:**
 - **Usuario:** `admin`
-- **Contraseña:** la que definiste en `INIT_ADMIN_PASSWORD`
+- **Contraseña:** La definida en `INIT_ADMIN_PASSWORD`
 
-Tras iniciar sesión, puedes comenzar a crear espacios, subir usuarios y configurar la plataforma según tus necesidades.
+## ⚙️ Configuración
 
-## Notas adicionales
+1. **Variables de entorno principales** en `docker-compose.yml`:
+   - `INIT_ADMIN` - Habilita creación de admin inicial (`true/false`)
+   - `INIT_ADMIN_LOGIN` - Usuario administrador inicial
+   - `INIT_ADMIN_PASSWORD` - Contraseña segura para el admin
+   - `PUID/PGID` - IDs de usuario/grupo para permisos de archivos
 
-- Si deseas cambiar el puerto de acceso, modifica la sección `ports` del servicio `sync_in`.
-- Para persistir la configuración de OnlyOffice, asegúrate de que el volumen `/volume1/docker/syncin/onlyoffice/data` exista o ajusta la ruta según tu sistema.
-- Recuerda realizar copias de seguridad periódicas de los volúmenes de datos (`/volume1/docker/syncin/data` y `/volume1/docker/syncin/db`).
+2. **Volúmenes persistentes** configurados:
+   - `/app/data` - Datos de archivos de usuarios
+   - `/app/environment/environment.yaml` - Configuración avanzada
+   - `/app/static/releases` - Archivos estáticos de clientes (solo lectura)
+   - `/var/lib/mysql` - Base de datos MariaDB
+   - `/var/www/onlyoffice/Data` - Datos de OnlyOffice
 
-## Licencia
+3. **Puertos expuestos:**
+   - `8324` → Interfaz web Sync-in
+   - `8467` → OnlyOffice Document Server
 
-Este proyecto está licenciado bajo los términos de la **AGPL‑3.0**. Consulta el archivo [LICENSE](LICENSE) para más detalles.
+## 🚀 Primeros pasos
+
+1. **Configuración del Administrador**
+   - Accede al panel con las credenciales iniciales
+   - Ve a **Settings → Profile** y cambia la contraseña por defecto
+   - Configura la **URL pública del servidor** para que los enlaces funcionen correctamente
+
+2. **Crear el primer "Espacio" (Space)**
+   - En el menú lateral, selecciona **"Spaces" → "New Space"**
+   - Asigna un nombre (ej. "Proyectos 2026") y una descripción
+   - Define si es un espacio privado o compartido con el equipo
+
+3. **Añadir Colaboradores**
+   - Ve a **Settings → Users → New User**
+   - Crea cuentas para tu equipo con roles específicos (Admin, User, Guest)
+   - Asigna a los usuarios a los espacios creados anteriormente
+
+4. **Subir y Sincronizar Archivos**
+   - Arrastra archivos directamente a la interfaz web
+   - Instala el **cliente de escritorio** en Windows/Linux/macOS
+   - Conecta el cliente usando la URL de tu servidor y tus credenciales
+
+5. **Activar Edición Colaborativa**
+   - Ve a **Settings → Integrations → Document Server**
+   - Ingresa la URL del contenedor de OnlyOffice (ej. `http://localhost:8467`)
+   - Crea un documento nuevo y comienza a editar en tiempo real con tu equipo
+
+## 💡 Casos de uso
+
+- 🏠 **Sustituto de Dropbox/OneDrive:** Almacenamiento total bajo tu control, sin cuotas mensuales
+- 👥 **Trabajo en Equipo:** Espacios compartidos para proyectos con control de versiones y comentarios
+- 📊 **Gestión de Documentos:** Edición simultánea de hojas de cálculo y textos sin salir del servidor
+- 🔗 **Intercambio de Archivos:** Envío de archivos pesados a clientes mediante enlaces cifrados y temporales
+- 🏢 **Infraestructuras Privadas:** Ideal para entornos corporativos que requieren cumplimiento de privacidad estricto
+
+## 🔒 Acceso remoto seguro
+
+### HTTPS con Caddy (producción)
+
+```caddyfile
+# Caddyfile
+syncin.tudominio.com {
+    reverse_proxy localhost:8324
+}
+```
+
+Acceso remoto seguro: **https://syncin.tudominio.com** con certificados SSL automáticos gestionados por Caddy.
+
+## 🛠️ Gestión y mantenimiento
+
+```bash
+# Ver logs del servidor
+docker compose logs -f sync_in
+
+# Backup de la Base de Datos
+docker compose exec mariadb mysqldump -u root -p sync_in > syncin-backup-$(date +%Y%m%d).sql
+
+# Backup de archivos físicos
+tar -cvzf syncin-data-backup.tar.gz /volume1/docker/syncin/data
+
+# Actualizar la plataforma
+docker compose pull
+docker compose up -d
+
+# Monitorear recursos
+docker stats sync_in mariadb onlyoffice
+```
+
+## 📝 Licencia
+
+Este proyecto está licenciado bajo **AGPL-3.0** - ver el archivo [LICENSE](https://www.gnu.org/licenses/agpl-3.0.html) para más detalles.
 
 ---
 
-> ✨ **Nota**: Este repositorio contiene la configuración Docker y documentación extraída del tutorial de Genbyte: [Cómo instalar Sync‑in en Docker](https://genbyte.blogspot.com/2026/07/como-instalar-sync-in-en-docker.html)
+> 📖 **Guía completa:** [Cómo instalar Sync-in en Docker - Plataforma Soberana de Almacenamiento y Colaboración](https://genbyte.blogspot.com/2026/07/como-instalar-sync-in-en-docker.html)
