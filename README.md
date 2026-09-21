@@ -18,20 +18,19 @@
 - 🔗 **Enlaces públicos protegidos** con contraseñas y fechas de expiración
 - 📝 **Edición de documentos en tiempo real** (integración con OnlyOffice y Collabora)
 - 🔍 **Indexación profunda de contenido** para búsqueda full-text
-- 🌐 **Soporte WebDAV** para montar la nube como unidad de red
+- 💾 **Soporte WebDAV** para montar la nube como unidad de red
 - 💻 **Clientes nativos** para Windows, macOS y Linux
-- ⚡ **Sincronización multi-dispositivo** eficiente y segura
-- 🏠 **Self-hosted** - Control total de infraestructura
+- ⚡ **Sincronización soberana** - Tus archivos, tu servidor, control total
+- 🛡️ **Privacidad total** - Sin rastreo, sin cuotas mensuales, solo tu disco
 
 ## 📋 Requisitos del sistema
 
-- ✅ Docker
-- ✅ Docker Compose
+- 🐳 **Docker** y **Docker Compose** instalados
 - 💾 **RAM:** Recomendado 2GB+ (especialmente si usas OnlyOffice/Collabora)
 - 💿 **Espacio en disco:** Según el volumen de datos a almacenar
 - 🗄️ **Base de Datos:** MariaDB/MySQL (incluida en el despliegue)
-- 🔌 **Puertos:** 80/443 configurables para acceso web
-- 🌐 Navegador moderno y cliente de escritorio Sync-in (opcional)
+- 🌐 **Puertos:** 80/443 configurables para acceso web (por defecto 8324)
+- 🌍 **Navegador moderno** y cliente de escritorio Sync-in (opcional)
 
 > **Sugerencia:** Para una experiencia completa de colaboración, despliega el contenedor de OnlyOffice junto al servidor de Sync-in.
 
@@ -86,15 +85,16 @@ EOF
 ### Paso 2: Iniciar los servicios
 
 ```bash
+# Levantar los contenedores en segundo plano
 docker compose up -d
 
 # Verifica que todos los contenedores estén corriendo
 docker compose ps
 ```
 
-### Acceder
+### Acceder a la interfaz
 
-🌐 **http://localhost:8324** - Dashboard de Sync-in
+Abre tu navegador en: **http://localhost:8324**
 
 **Primer login:**
 - **Usuario:** `admin`
@@ -102,16 +102,22 @@ docker compose ps
 
 ## ⚙️ Configuración
 
-1. **Variables de entorno críticas** - Modifica en `docker-compose.yml`:
-   - `INIT_ADMIN_PASSWORD`: Contraseña segura para el administrador inicial
-   - `MYSQL_ROOT_PASSWORD`: Contraseña root de MariaDB
-   - `PUID`/`PGID`: IDs de usuario/grupo para permisos de archivos (ajusta a tu NAS/servidor)
+1. **Variables de entorno principales** (en `docker-compose.yml`):
+   - `INIT_ADMIN` - Habilita creación de admin inicial (`true`/`false`)
+   - `INIT_ADMIN_LOGIN` - Usuario administrador por defecto
+   - `INIT_ADMIN_PASSWORD` - Contraseña segura para el admin
+   - `PUID`/`PGID` - IDs de usuario/grupo para permisos de archivos
 
-2. **Rutas de volúmenes** - Adapta las rutas `/volume1/docker/syncin/...` a tu estructura de directorios
+2. **Volúmenes persistentes**:
+   - `/app/data` - Datos de la aplicación y archivos de usuarios
+   - `/app/environment/environment.yaml` - Configuración avanzada
+   - `/app/static/releases` - Archivos estáticos de clientes (solo lectura)
+   - `/var/lib/mysql` - Base de datos MariaDB
+   - `/var/www/onlyoffice/Data` - Datos de OnlyOffice
 
-3. **Puertos** - Cambia `"8324:8080"` y `"8467:80"` si hay conflictos
-
-4. **Archivo environment.yaml** - Configuración avanzada opcional en `/volume1/docker/syncin/environment.yaml`
+3. **Puertos expuestos**:
+   - `8324` → Sync-in Web UI
+   - `8467` → OnlyOffice Document Server
 
 ## 🚀 Primeros pasos
 
@@ -121,7 +127,7 @@ docker compose ps
    - Configura la **URL pública del servidor** para que los enlaces funcionen correctamente
 
 2. **Crear el primer "Espacio" (Space)**
-   - En el menú lateral, selecciona **"Spaces" → "New Space"**
+   - En el menú lateral, selecciona **Spaces → New Space**
    - Asigna un nombre (ej. "Proyectos 2026") y una descripción
    - Define si es un espacio privado o compartido con el equipo
 
@@ -159,25 +165,33 @@ syncin.tudominio.com {
 }
 ```
 
-🌐 **https://syncin.tudominio.com** con certificados SSL automáticos gestionados por Caddy.
+Acceso remoto seguro: **https://syncin.tudominio.com** con certificados SSL automáticos gestionados por Caddy.
 
 ## 🛠️ Gestión y mantenimiento
 
+### Ver logs del servidor
 ```bash
-# Ver logs del servidor
 docker compose logs -f sync_in
+```
 
-# Backup de la Base de Datos
+### Backup de la Base de Datos
+```bash
 docker compose exec mariadb mysqldump -u root -p sync_in > syncin-backup-$(date +%Y%m%d).sql
+```
 
-# Backup de archivos físicos
+### Backup de archivos físicos
+```bash
 tar -cvzf syncin-data-backup.tar.gz /volume1/docker/syncin/data
+```
 
-# Actualizar la plataforma
+### Actualizar la plataforma
+```bash
 docker compose pull
 docker compose up -d
+```
 
-# Monitorear recursos
+### Monitorear recursos
+```bash
 docker stats sync_in mariadb onlyoffice
 ```
 
@@ -187,11 +201,4 @@ Este proyecto está licenciado bajo **AGPL-3.0** - ver el archivo [LICENSE](http
 
 ---
 
-> 📖 **Guía completa:** [Cómo instalar Sync-in en Docker - Plataforma Soberana de Almacenamiento y Colaboración](https://genbyte.blogspot.com/2026/07/como-instalar-sync-in-en-docker.html)
-
-**Referencias oficiales:**
-- [GitHub Repository - Sync-in Server](https://github.com/syncin/server)
-- [Official Website - Sync-in](https://syncin.app)
-- [Documentation Hub](https://docs.syncin.app)
-- [Docker Hub - syncin/server](https://hub.docker.com/r/syncin/server)
-- [Join Community on Discord](https://discord.gg/syncin)
+> 📖 **Guía completa y más detalles en:** [Cómo instalar Sync-in en Docker - Plataforma Soberana de Almacenamiento y Colaboración](https://genbyte.blogspot.com/2026/07/como-instalar-sync-in-en-docker.html)
